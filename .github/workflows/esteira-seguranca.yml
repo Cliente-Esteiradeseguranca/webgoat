@@ -1,0 +1,22 @@
+# Integração com a Esteira de Segurança — cliente piloto (WebGoat).
+#
+# api-url aponta pro túnel temporário da API local (teste de validação,
+# não é a URL de produção) — actions-ref: main porque ainda não existe
+# tag v1 cortada em esteiradeseguranca/workflow.
+
+name: Esteira de Segurança
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch: {}
+
+jobs:
+  scan:
+    uses: esteiradeseguranca/workflow/.github/workflows/security-scan.yml@main
+    with:
+      api-url: "https://accessory-scripting-sensitivity-sustainable.trycloudflare.com"
+      actions-source: "esteiradeseguranca/workflow"
+      actions-ref: "main"
+    secrets:
+      token: ${{ secrets.ESTEIRA_TOKEN }}

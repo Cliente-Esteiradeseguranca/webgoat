@@ -1,0 +1,50 @@
+# Diagnóstico pontual: reroda SÓ o Trivy (fs) contra o WebGoat, sem o
+# resto do pipeline — pra confirmar se o rate limit do Maven Central que
+# derrubou o Trivy no run anterior (429, Retry-After: 1800) já liberou.
+# Não é parte do pipeline oficial do cliente piloto (esse continua sendo
+# .github/workflows/esteira-seguranca.yml, chamando o reusable workflow
+# completo) — arquivo temporário, remover depois de confirmar o
+# resultado.
+
+name: Diagnóstico — Trivy isolado
+
+on:
+  workflow_dispatch: {}
+
+jobs:
+  trivy-only:
+    name: Trivy (fs) isolado
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout do repositório
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Buscar toolkit (scripts/regras privadas)
+        uses: esteiradeseguranca/workflow/actions/fetch-toolkit@v1
+        with:
+          api-url: "https://accessory-scripting-sensitivity-sustainable.trycloudflare.com"
+          token: ${{ secrets.ESTEIRA_TOKEN }}
+          ref: "v1"
+
+      - name: Trivy (SCA / dependências)
+        uses: esteiradeseguranca/workflow/actions/run-trivy-fs@v1
+
+      - name: Guardar resultado como artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: trivy-only-results
+          path: results/
+          retention-days: 7
+          if-no-files-found: warn
+
+      - name: Enviar resultado para a Esteira de Segurança
+        if: always()
+        uses: esteiradeseguranca/workflow/actions/submit-results@v1
+        with:
+          api-url: "https://accessory-scripting-sensitivity-sustainable.trycloudflare.com"
+          token: ${{ secrets.ESTEIRA_TOKEN }}

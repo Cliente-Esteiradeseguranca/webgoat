@@ -17,6 +17,6 @@ jobs:
   scan:
     uses: esteiradeseguranca/workflow/.github/workflows/security-scan.yml@v1
     with:
-      api-url: "https://accessory-scripting-sensitivity-sustainable.trycloudflare.com"
+      api-url: "https://forget-securities-did-ellen.trycloudflare.com"
     secrets:
       token: ${{ secrets.ESTEIRA_TOKEN }}

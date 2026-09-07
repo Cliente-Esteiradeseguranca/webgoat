@@ -11,12 +11,17 @@ name: Esteira de Segurança
 on:
   push:
     branches: [main]
-  workflow_dispatch: {}
+  pull_request:
+    branches: [main]
 
 jobs:
   scan:
     uses: esteiradeseguranca/workflow/.github/workflows/security-scan.yml@v1
-    with:
-      api-url: "https://differ-serve-trade-therapeutic.trycloudflare.com"
     secrets:
       token: ${{ secrets.ESTEIRA_TOKEN }}
+    # Opcional: descomente para bloquear o merge quando houver achado
+    # aberto (ou sendo corrigido) de severidade crítica ou alta —
+    # achado liberado temporariamente ou marcado falso-positivo pelo
+    # cliente não bloqueia.
+    with:
+      fail-on-critical: true

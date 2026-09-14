@@ -1,10 +1,5 @@
 # Integração com a Esteira de Segurança — cliente piloto (WebGoat).
 #
-# api-url aponta pro túnel temporário da API local (teste de validação,
-# não é a URL de produção). Fora isso, este arquivo é igual ao de um
-# cliente real (examples/client-workflow.yml) — usa a tag v1 oficial,
-# sem overrides de actions-ref (o default do reusable workflow já é
-# "v1").
 
 name: Esteira de Segurança
 
